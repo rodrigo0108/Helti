@@ -1,5 +1,10 @@
 package com.heyoh.helti.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +34,11 @@ import com.heyoh.helti.ui.custom.CustomButton
 import com.heyoh.helti.ui.theme.Gray200
 import com.heyoh.helti.ui.theme.NutriPlayTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun LoginScreen(goToMain: () -> Unit) {
+fun SharedTransitionScope.LoginScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    goToMain: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
@@ -62,6 +70,12 @@ fun LoginScreen(goToMain: () -> Unit) {
                     modifier = Modifier
                         .padding(top = 60.dp)
                         .size(100.dp, 100.dp)
+                        .sharedElement(
+                            state = rememberSharedContentState(
+                                key = "image-ic_logo_1"
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        )
                 )
 
                 OutlinedTextField(
@@ -104,11 +118,16 @@ fun LoginScreen(goToMain: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    NutriPlayTheme {
-        LoginScreen(::goToMainPreview)
+    SharedTransitionLayout {
+        AnimatedVisibility(visible = true) {
+            NutriPlayTheme {
+                LoginScreen(animatedVisibilityScope = this, ::goToMainPreview)
+            }
+        }
     }
 }
 

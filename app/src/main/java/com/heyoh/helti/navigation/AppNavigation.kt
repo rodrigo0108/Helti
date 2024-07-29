@@ -1,6 +1,10 @@
 package com.heyoh.helti.navigation
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -17,29 +21,36 @@ import com.heyoh.helti.screens.ProfileScreen
 import com.heyoh.helti.screens.SearchScreen
 import com.heyoh.helti.screens.SplashScreen
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreen.SplashScreen.route)
-    {
-        composable(AppScreen.SplashScreen.route){
-            SplashScreen(goToLogin = {
-                navController.popBackStack()
-                navController.navigate(AppScreen.LoginScreen.route)
-            })
-        }
-        composable(AppScreen.LoginScreen.route){
-            LoginScreen(goToMain = {
-                navController.popBackStack()
-                navController.navigate(AppScreen.MainScreen.route)
-            })
-        }
-        composable(AppScreen.MainScreen.route){
-            MainScreen()
+    SharedTransitionLayout {
+        NavHost(navController = navController, startDestination = AppScreen.SplashScreen.route)
+        {
+            composable(AppScreen.SplashScreen.route) {
+                SplashScreen(
+                    animatedVisibilityScope =  this@composable,
+                    goToLogin = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreen.LoginScreen.route)
+                })
+            }
+            composable(AppScreen.LoginScreen.route) {
+                LoginScreen(
+                    animatedVisibilityScope =  this@composable,
+                    goToMain = {
+                    navController.popBackStack()
+                    navController.navigate(AppScreen.MainScreen.route)
+                })
+            }
+            composable(AppScreen.MainScreen.route) {
+                MainScreen()
+            }
         }
     }
-
 }
+
 @Composable
 fun HomeNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = AppScreen.HomeScreen.route)
@@ -52,6 +63,7 @@ fun HomeNavigation(navController: NavHostController) {
     }
 
 }
+
 private fun NavGraphBuilder.addHomeRoute(navController: NavController) {
     navigation(
         route = AppScreen.HomeScreen.route,
@@ -61,6 +73,7 @@ private fun NavGraphBuilder.addHomeRoute(navController: NavController) {
         showHomeDetail(navController)
     }
 }
+
 private fun NavGraphBuilder.showHome(navController: NavController) {
     composable(route = LeafScreen.Home.route) {
         HomeScreen(
@@ -70,6 +83,7 @@ private fun NavGraphBuilder.showHome(navController: NavController) {
         )
     }
 }
+
 private fun NavGraphBuilder.showHomeDetail(navController: NavController) {
     composable(route = LeafScreen.HomeDetail.route) {
         HomeDetailScreen(
@@ -79,6 +93,7 @@ private fun NavGraphBuilder.showHomeDetail(navController: NavController) {
         )
     }
 }
+
 private fun NavGraphBuilder.addSearchRoute(navController: NavController) {
     navigation(
         route = AppScreen.SearchScreen.route,
@@ -87,6 +102,7 @@ private fun NavGraphBuilder.addSearchRoute(navController: NavController) {
         showSearch(navController)
     }
 }
+
 private fun NavGraphBuilder.showSearch(navController: NavController) {
     composable(route = LeafScreen.Search.route) {
         SearchScreen()
@@ -101,6 +117,7 @@ private fun NavGraphBuilder.addFavoritesRoute(navController: NavController) {
         showFavorites(navController)
     }
 }
+
 private fun NavGraphBuilder.showFavorites(navController: NavController) {
     composable(route = LeafScreen.Favorites.route) {
         FavoritesScreen()
@@ -115,6 +132,7 @@ private fun NavGraphBuilder.addProfileRoute(navController: NavController) {
         showProfile(navController)
     }
 }
+
 private fun NavGraphBuilder.showProfile(navController: NavController) {
     composable(route = LeafScreen.Profile.route) {
         ProfileScreen()

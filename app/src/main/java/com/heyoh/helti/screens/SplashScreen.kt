@@ -1,5 +1,10 @@
 package com.heyoh.helti.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,31 +22,40 @@ import androidx.navigation.compose.rememberNavController
 import com.heyoh.helti.R
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SplashScreen(goToLogin: () -> Unit)
+fun SharedTransitionScope.SplashScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    goToLogin: () -> Unit)
 {
     LaunchedEffect(key1 = true){
-        delay(5000)
+        delay(2000)
         goToLogin()
     }
-    Splash()
-}
-
-@Composable
-fun Splash() {
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
         Image(
             painter = painterResource(id = R.drawable.ic_logo_1),
             contentDescription = "Logo NutriPlay",
-            modifier = Modifier.size(150.dp, 150.dp))
+            modifier = Modifier.size(150.dp, 150.dp).sharedElement(
+                state = rememberSharedContentState(
+                    key = "image-ic_logo_1"
+                ),
+                animatedVisibilityScope = animatedVisibilityScope,
+            ))
     }
 }
 
+
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview(navController: NavController = rememberNavController()){
-    SplashScreen(::goToLoginPreview)
+    SharedTransitionLayout {
+        AnimatedVisibility(visible = true) {
+            SplashScreen(animatedVisibilityScope = this, ::goToLoginPreview)
+        }
+    }
 }
 private fun goToLoginPreview(){}

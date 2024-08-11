@@ -1,10 +1,6 @@
 package com.heyoh.helti.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -21,34 +17,30 @@ import com.heyoh.helti.screens.ProfileScreen
 import com.heyoh.helti.screens.SearchScreen
 import com.heyoh.helti.screens.SplashScreen
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    SharedTransitionLayout {
-        NavHost(navController = navController, startDestination = AppScreen.SplashScreen.route)
-        {
-            composable(AppScreen.SplashScreen.route) {
-                SplashScreen(
-                    animatedVisibilityScope =  this@composable,
-                    goToLogin = {
+    NavHost(navController = navController, startDestination = AppScreen.LoginScreen.route)
+    {
+        /*composable(AppScreen.SplashScreen.route) {
+            SplashScreen(
+                goToLogin = {
                     navController.popBackStack()
                     navController.navigate(AppScreen.LoginScreen.route)
                 })
-            }
-            composable(AppScreen.LoginScreen.route) {
-                LoginScreen(
-                    animatedVisibilityScope =  this@composable,
-                    goToMain = {
+        }*/
+        composable(AppScreen.LoginScreen.route) {
+            LoginScreen(
+                goToMain = {
                     navController.popBackStack()
                     navController.navigate(AppScreen.MainScreen.route)
                 })
-            }
-            composable(AppScreen.MainScreen.route) {
-                MainScreen()
-            }
+        }
+        composable(AppScreen.MainScreen.route) {
+            MainScreen()
         }
     }
+
 }
 
 @Composable

@@ -1,10 +1,5 @@
 package com.heyoh.helti.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,11 +29,10 @@ import com.heyoh.helti.ui.custom.CustomButton
 import com.heyoh.helti.ui.theme.Gray200
 import com.heyoh.helti.ui.theme.NutriPlayTheme
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.LoginScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    goToMain: () -> Unit) {
+fun LoginScreen(
+    goToMain: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Scaffold(
@@ -70,12 +64,6 @@ fun SharedTransitionScope.LoginScreen(
                     modifier = Modifier
                         .padding(top = 60.dp)
                         .size(100.dp, 100.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(
-                                key = "image-ic_logo_1"
-                            ),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        )
                 )
 
                 OutlinedTextField(
@@ -118,17 +106,13 @@ fun SharedTransitionScope.LoginScreen(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    SharedTransitionLayout {
-        AnimatedVisibility(visible = true) {
-            NutriPlayTheme {
-                LoginScreen(animatedVisibilityScope = this, ::goToMainPreview)
-            }
-        }
+    NutriPlayTheme {
+        LoginScreen(::goToMainPreview)
     }
 }
+
 
 private fun goToMainPreview() {}
